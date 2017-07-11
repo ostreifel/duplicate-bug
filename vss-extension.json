@@ -1,11 +1,11 @@
 {
     "manifestVersion": 1,
-    "id": "vsts-extension-ts-seed-simple",
+    "id": "duplicate-bug",
     "version": "0.1.12",
-    "name": "VSTS Seed Extension",
+    "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
-    "description": "Describe your extension.",
-    "publisher": "your-publisher",
+    "description": "Detect duplication as bugs are filed.",
+    "publisher": "ostreifel",
     "icons": {
         "default": "img/logo.png"
     },
@@ -15,31 +15,13 @@
         }
     ],
     "tags": [
-        "Sample"
+        "Work Item",
+        "group",
+        "bug"
     ],
     "content": {
         "details": {
             "path": "details.md"
-        }
-    },
-    "links": {
-        "home": {
-            "uri": "https://bit.ly"
-        },
-        "getstarted": {
-            "uri": "https://bit.ly"
-        },
-        "learn": {
-            "uri": "https://bit.ly"
-        },
-        "support": {
-            "uri": "https://bit.ly"
-        },
-        "repository": {
-            "uri": "https://bit.ly"
-        },
-        "issues": {
-            "uri": "https://bit.ly"
         }
     },
     "branding": {
@@ -61,11 +43,11 @@
         }
     ],
     "categories": [
-        "Integrate"
+        "Plan and track"
     ],
     "contributions": [
         {
-            "id": "vsts-extension-ts-seed-simple-action",
+            "id": "duplicate-bug-action",
             "type": "ms.vss-web.action-provider",
             "description": "",
             "targets": [
