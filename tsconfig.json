@@ -3,14 +3,8 @@
         "module": "amd",
         "sourceMap": false,
         "rootDir": "./scripts",
-        "moduleResolution": "node"
-    },
-    "filesGlob": [
-        "./scripts/**/*.ts",
-        "!**/*.tests.ts"
-    ],
-    "files": [
-        "scripts/app.ts",
-        "scripts/logic/messageHelper.ts"
-    ]
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true
+    }
 }

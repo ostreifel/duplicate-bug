@@ -6,7 +6,7 @@
 /typings            - Typescript typings
 
 details.md          - Description to be shown in marketplace   
-bugGroup.html          - Main entry point
+duplicatesGroup.html          - Main entry point
 vss-extension.json  - Extension manifest
 ```
 

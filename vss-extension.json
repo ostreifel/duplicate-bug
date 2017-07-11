@@ -38,7 +38,7 @@
             "addressable": true
         },
         {
-            "path": "bugGroup.html",
+            "path": "duplicatesGroup.html",
             "addressable": true
         }
     ],
@@ -54,8 +54,8 @@
                 "ms.vss-work-web.work-item-form"
             ],
             "properties": {
-                "name": "Board",
-                "uri": "bugGroup.html"
+                "name": "Similar bugs",
+                "uri": "duplicatesGroup.html"
             }
         }
     ]
