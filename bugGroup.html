@@ -6,6 +6,7 @@
     <script src="build/VSS.SDK.min.js"></script>
 </head>
 <body>
+    <div>Hello from bugGroup.html</div>
     <script type="text/javascript">
         // Initialize framework 
         VSS.init({
@@ -15,7 +16,7 @@
         });
         
         // Load main entry point for extension
-        VSS.require(["build/app"], function () {
+        VSS.require(["build/bugGroup"], function () {
             // Loading succeeded
             VSS.notifyLoadSucceeded();
         });

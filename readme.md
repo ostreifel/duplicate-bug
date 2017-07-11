@@ -1,7 +1,3 @@
-## duplicate-bug ##
-
-Very simple seed project for developing VSTS extensions using Typescript. Utilizes Typescript, grunt, and tsd. Detailed explanation how to get started can be found at https://cschleiden.wordpress.com/2016/02/24/extending-vsts-setup/.
-
 ### Structure ###
 
 ```
@@ -10,7 +6,7 @@ Very simple seed project for developing VSTS extensions using Typescript. Utiliz
 /typings            - Typescript typings
 
 details.md          - Description to be shown in marketplace   
-index.html          - Main entry point
+bugGroup.html          - Main entry point
 vss-extension.json  - Extension manifest
 ```
 
@@ -29,18 +25,6 @@ vss-extension.json  - Extension manifest
 2. `npm install -g grunt` to install a global copy of grunt (unless it's already installed)
 2. `grunt` to build and package the application
 
-#### Grunt ####
-
-Three basic `grunt` tasks are defined:
-
-* `build` - Compiles TS files in `scripts` folder
-* `package-dev` - Builds the development version of the vsix package
-* `package-release` - Builds the release version of the vsix package
-* `publish-dev` - Publishes the development version of the extension to the marketplace using `tfx-cli`
-* `publish-release` - Publishes the release version of the extension to the marketplace using `tfx-cli`
-
-Note: To avoid `tfx` prompting for your token when publishing, login in beforehand using `tfx login` and the service uri of ` https://marketplace.visualstudio.com`.
-
 #### Including framework modules ####
 
 The VSTS framework is setup to initalize the requirejs AMD loader, so just use `import Foo = require("foo")` to include framework modules.
@@ -49,10 +33,3 @@ The VSTS framework is setup to initalize the requirejs AMD loader, so just use `
 
 The included `.vscode` config allows you to open and build the project using [VS Code](https://code.visualstudio.com/).
 
-#### Unit Testing ####
-
-The project is setup for unit testing using `mocha`, `chai`, and the `karma` test runner. A simple example unit test is included in `scripts/logic/messageHelper.tests.ts`. To run tests just execute:
-
-```
-grunt test
-```

@@ -38,7 +38,7 @@
             "addressable": true
         },
         {
-            "path": "index.html",
+            "path": "bugGroup.html",
             "addressable": true
         }
     ],
@@ -48,14 +48,14 @@
     "contributions": [
         {
             "id": "duplicate-bug-action",
-            "type": "ms.vss-web.action-provider",
+            "type": "ms.vss-work-web.work-item-form-group",
             "description": "",
             "targets": [
-                "ms.vss-work-web.work-item-context-menu"
+                "ms.vss-work-web.work-item-form"
             ],
             "properties": {
-                "group": "contributed",
-                "uri": "index.html"
+                "name": "Board",
+                "uri": "bugGroup.html"
             }
         }
     ]
