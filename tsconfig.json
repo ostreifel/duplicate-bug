@@ -4,7 +4,6 @@
         "sourceMap": false,
         "rootDir": "./scripts",
         "moduleResolution": "node",
-        "noUnusedLocals": true,
-        "noUnusedParameters": true
+        "noUnusedLocals": true
     }
 }
