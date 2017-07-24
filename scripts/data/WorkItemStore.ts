@@ -25,14 +25,15 @@ export class WorkItemStore {
         const cutoff = new Date();
         cutoff.setMonth(-3);
         const query = `
-            SELECT
-                [System.Id]
-            FROM workitems
-            WHERE
-                [System.TeamProject] = @project
-                AND System.CreatedDate > @today - 90
+SELECT
+        [System.Id]
+FROM workitems
+WHERE
+        [System.TeamProject] = @project
+        AND [System.CreatedDate] > @today - 90
+ORDER BY [System.ChangedDate] DESC
         `;
-        return getClient().queryByWiql({ query }, VSS.getWebContext().project.id)
+        return getClient().queryByWiql({ query }, VSS.getWebContext().project.id, undefined, undefined, 2000)
             .then((res) => res.workItems.map((wi) => wi.id));
     }
     private fetchAllWorkItems() {
