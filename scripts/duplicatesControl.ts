@@ -4,27 +4,36 @@ import {
     IWorkItemLoadedArgs,
     IWorkItemNotificationListener,
 } from "TFS/WorkItemTracking/ExtensionContracts";
+import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 import { WorkItemIndex } from "./data/WorkItemIndex";
-import { WorkItemStore } from "./data/WorkItemStore";
+import { showDuplicates } from "./duplicatesView";
 
-const index = new WorkItemIndex(new WorkItemStore());
+const titleField = "System.Title";
 export class DuplicatesControl implements Partial<IWorkItemNotificationListener> {
+    private index: WorkItemIndex;
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
-        $(".message").text("Hello from duplicatesControl.ts");
+        this.index = new WorkItemIndex(workItemLoadedArgs.id);
+        if (workItemLoadedArgs.isNew) {
+            showDuplicates([]);
+        } else {
+            WorkItemFormService.getService().then((formService) =>
+                formService.getFieldValues([titleField]).then((values) => {
+                    this.search(values[titleField] as string);
+                }),
+            );
+        }
+        showDuplicates([]);
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
-        const titleField = "System.Title";
         if (titleField in fieldChangedArgs.changedFields) {
-            index.search(fieldChangedArgs.changedFields[titleField]).then((matches) => {
-                $(".message").html("");
-                for (const match of matches) {
-                    const title = match.fields[titleField];
-                    const id = match.id;
-                    const text = `${id}: ${title}`;
-                    $(".message").append($("<div />").text(text));
-                }
-            });
+            this.search(fieldChangedArgs.changedFields[titleField]);
         }
+    }
+
+    private search(query: string) {
+        this.index.search(query).then((matches) => {
+            showDuplicates(matches);
+        });
     }
 
 }

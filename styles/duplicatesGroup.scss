@@ -1,0 +1,13 @@
+.results {
+    .matches {
+        .workitem {
+            .id {
+                margin: 0 5px;
+                font-weight: bold;
+            }
+        }
+    }
+    .no-results {
+        font-style: italic;
+    }
+}

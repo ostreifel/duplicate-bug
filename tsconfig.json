@@ -3,6 +3,7 @@
         "module": "amd",
         "sourceMap": false,
         "rootDir": "./scripts",
+        "jsx": "react",
         "moduleResolution": "node",
         "noUnusedLocals": true
     }

@@ -10,13 +10,13 @@ const tslint = require('gulp-tslint');
 
 const args =  yargs.argv;
 
-const jsFolder = 'dist';
+const distFolder = 'dist';
 
 const tsProject = ts.createProject('tsconfig.json', {
     typescript: require('typescript')
 });
 gulp.task('clean', () => {
-    return gulp.src([jsFolder, '*.vsix'])
+    return gulp.src([distFolder, '*.vsix'])
         .pipe(clean());
 });
 
@@ -28,9 +28,16 @@ gulp.task('tslint', () => {
         .pipe(tslint.report());
 });
 
-gulp.task('build', ['clean', 'tslint'], () => {
+
+gulp.task('styles', ['clean'], () => {
+    return gulp.src("styles/**/*scss")
+        .pipe(sass())
+        .pipe(gulp.dest(distFolder));
+});
+
+gulp.task('build', ['styles', 'tslint'], () => {
     return tsProject.src()
-        .pipe(tsProject()).js.pipe(gulp.dest(jsFolder));
+        .pipe(tsProject()).js.pipe(gulp.dest(distFolder));
 });
 
 
@@ -38,7 +45,7 @@ gulp.task('copy', ['build'], () => {
     gulp.src([
         'node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js',
         'node_modules/lunr/lunr.js'
-    ]).pipe(gulp.dest(jsFolder));
+    ]).pipe(gulp.dest(distFolder));
 });
 
 gulp.task('package', ['copy'], () => {
