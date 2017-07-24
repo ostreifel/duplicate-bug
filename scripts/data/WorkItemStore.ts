@@ -39,9 +39,12 @@ export class WorkItemStore {
         return this.fetchWorkItemIds().then((ids) => this.fetchWorkItems(ids));
     }
     private fetchWorkItems(ids: number[]): Q.IPromise<WorkItem[]> {
+        if (ids.length === 0) {
+            return Q([]);
+        }
         const batch = ids.slice(0, 200);
         const nextBatch = ids.slice(200);
-        return Q.all([getClient().getWorkItems(batch), this.fetchWorkItems(nextBatch)])
+        return Q.all([getClient().getWorkItems(batch), this.fetchWorkItems(nextBatch)] )
             .then(([curr, next]) => {
                 return [...curr, ...next];
             });
