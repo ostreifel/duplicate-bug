@@ -2,6 +2,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
+import { toggleDuplicate } from "./markDuplicate";
 
 class NoMatches extends React.Component<{}, {}> {
     public render() {
@@ -16,7 +17,7 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
         const wiUrl = `${uri}${project}/_workitems?id=${wi.id}&_a=edit&fullScreen=true`;
         return <div className="workitem">
             <span>{(wi.fields.score as number).toFixed(3)}</span>
-            <button className="dup-bug-action" title="Mark as duplicate">
+            <button className="dup-bug-action" title="Mark as duplicate" onClick={() => this.toggle()}>
                 <img src="img/dupBug.png"/>
             </button>
             <span className="id">{wi.id}</span>
@@ -24,6 +25,9 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
                 {wi.fields["System.Title"]}
             </a>
         </div>;
+    }
+    private toggle() {
+        toggleDuplicate(this.props.workitem.url);
     }
 }
 
