@@ -1,9 +1,14 @@
 .results {
     .matches {
         .workitem {
+            > * {
+                margin: 0 5px 0 0;
+            }
             .id {
-                margin: 0 5px;
                 font-weight: bold;
+            }
+            .dup-bug-action {
+                height: 16px;
             }
         }
     }

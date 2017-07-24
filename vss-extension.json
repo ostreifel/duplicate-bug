@@ -1,13 +1,13 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "0.1.40",
+    "version": "0.1.50",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
     "publisher": "ottostreifel",
     "icons": {
-        "default": "img/logo.png"
+        "default": "img/dupBug.png"
     },
     "targets": [
         {
@@ -55,7 +55,8 @@
             ],
             "properties": {
                 "name": "Similar work",
-                "uri": "duplicatesGroup.html"
+                "uri": "duplicatesGroup.html",
+                "height": 110
             }
         }
     ]

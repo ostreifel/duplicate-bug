@@ -16,6 +16,7 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
         const wiUrl = `${uri}${project}/_workitems?id=${wi.id}&_a=edit&fullScreen=true`;
         return <div className="workitem">
             <span>{(wi.fields.score as number).toFixed(3)}</span>
+            <img src="img/dupBug.png" className="dup-bug-action" title="Mark as duplicate"/>
             <span className="id">{wi.id}</span>
             <a className="title" href={wiUrl} target="_blank">
                 {wi.fields["System.Title"]}

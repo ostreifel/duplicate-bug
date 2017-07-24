@@ -46,6 +46,8 @@ function transformFields(fieldsArr: WorkItem[]): IFieldsDocument[] {
         return transformed;
     });
 }
+const top = 5;
+const scoreThreshold = .4;
 export class WorkItemIndex {
     constructor(
         private readonly wiId: number,
@@ -54,9 +56,10 @@ export class WorkItemIndex {
     public search(query: string): Q.IPromise<WorkItem[]> {
         return cachedIndex.getValue().then((index) => {
             const results = index.search(query)
-                .slice(0, 6)
+                .slice(0, top + 1)
                 .filter((r) => Number(r.ref) !== this.wiId)
-                .slice(0, 5);
+                .filter((r) => r.score > scoreThreshold)
+                .slice(0, top);
             return workItemStore.getLookup().then((lookup) => results.map((r) => {
                 const wi = lookup[r.ref];
                 wi.fields.score = r.score;
