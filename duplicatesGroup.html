@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <script src="build/VSS.SDK.min.js"></script>
+    <script src="dist/VSS.SDK.min.js"></script>
+    <!-- <script src="dist/lunr.js"></script> -->
 </head>
 <body>
     <div class=message>Hello from duplicatesGroup.html</div>
@@ -15,8 +16,9 @@
             configureModuleLoader: true
         });
         
+        var require = { paths: { 'lunr': 'dist/lunr' } };
         // Load main entry point for extension
-        VSS.require(["build/bugGroup"], function () {
+        VSS.require(["dist/duplicatesGroup"], function () {
             // Loading succeeded
             VSS.notifyLoadSucceeded();
         });

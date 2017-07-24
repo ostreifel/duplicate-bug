@@ -35,8 +35,10 @@ gulp.task('build', ['clean', 'tslint'], () => {
 
 
 gulp.task('copy', ['build'], () => {
-    gulp.src('node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js')
-        .pipe(gulp.dest(jsFolder));
+    gulp.src([
+        'node_modules/vss-web-extension-sdk/lib/VSS.SDK.min.js',
+        'node_modules/lunr/lunr.js'
+    ]).pipe(gulp.dest(jsFolder));
 });
 
 gulp.task('package', ['copy'], () => {

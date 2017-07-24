@@ -1,11 +1,11 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "0.1.12",
+    "version": "0.1.21",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
-    "publisher": "ostreifel",
+    "publisher": "ottostreifel",
     "icons": {
         "default": "img/logo.png"
     },
@@ -34,7 +34,7 @@
             "addressable": true
         },
         {
-            "path": "scripts",
+            "path": "dist",
             "addressable": true
         },
         {
@@ -54,7 +54,7 @@
                 "ms.vss-work-web.work-item-form"
             ],
             "properties": {
-                "name": "Similar bugs",
+                "name": "Similar work",
                 "uri": "duplicatesGroup.html"
             }
         }

@@ -1,9 +1,9 @@
-///<reference types="vss-web-extension-sdk" />
-import { IWorkItemNotificationListener } from "TFS/WorkItemTracking/ExtensionContracts";
+/// <reference types="vss-web-extension-sdk" />
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import { DuplicatesControl } from "./duplicatesControl";
 
 // save on ctr + s
-$(window).bind("keydown", function (event: JQueryEventObject) {
+$(window).bind("keydown", (event: JQueryEventObject) => {
     if (event.ctrlKey || event.metaKey) {
         if (String.fromCharCode(event.which).toLowerCase() === "s") {
             event.preventDefault();
@@ -12,9 +12,5 @@ $(window).bind("keydown", function (event: JQueryEventObject) {
     }
 });
 
-
-const contextData: Partial<IWorkItemNotificationListener> = {
-};
-
 // Register context menu action provider
-VSS.register(VSS.getContribution().id, contextData);
+VSS.register(VSS.getContribution().id, DuplicatesControl);
