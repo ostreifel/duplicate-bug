@@ -13,4 +13,4 @@ $(window).bind("keydown", (event: JQueryEventObject) => {
 });
 
 // Register context menu action provider
-VSS.register(VSS.getContribution().id, DuplicatesControl);
+VSS.register(VSS.getContribution().id, new DuplicatesControl());
