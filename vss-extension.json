@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "1.0.2",
+    "version": "1.0.6",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
@@ -11,14 +11,25 @@
     },
     "targets": [
         {
-            "id": "Microsoft.VisualStudio.Services"
+            "id": "Microsoft.VisualStudio.Services.Integration",
+            "version": "[15.0,)"
+        },
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
         }
     ],
     "tags": [
         "Work Item",
         "group",
-        "bug"
+        "bug",
+        "duplicate",
+        "related"
     ],
+    "links": {
+        "getstarted": {
+            "uri": "https://marketplace.visualstudio.com/items?itemName=ottostreifel.duplicate-bug#Getting Started"
+        }
+    },
     "content": {
         "details": {
             "path": "details.md"
@@ -27,6 +38,10 @@
     "branding": {
         "color": "rgb(220, 235, 252)",
         "theme": "light"
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/ostreifel/duplicate-bug"
     },
     "files": [
         {
