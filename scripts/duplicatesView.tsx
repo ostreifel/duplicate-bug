@@ -9,7 +9,7 @@ class NoMatches extends React.Component<{}, {}> {
         return <div className={"no-results"}>{"No recent unlinked duplicates found"}</div>;
     }
 }
-class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
+class WorkItemMatch extends React.Component<{workitem: WorkItem, refresh: () => void}, {}> {
     public render() {
         const wi = this.props.workitem;
         const uri = VSS.getWebContext().host.uri;
@@ -28,26 +28,20 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
     }
     private add() {
         addDuplicate(this.props.workitem.url).then(
-            () => remove(this.props.workitem.id),
+            () => this.props.refresh(),
         );
     }
 }
 
-class Matches extends React.Component<{workitems: WorkItem[]}, {}> {
+class Matches extends React.Component<{workitems: WorkItem[], refresh: () => void}, {}> {
     public render() {
         return <div className="matches">{
-            this.props.workitems.map((wi) => <WorkItemMatch workitem={wi} />)
+            this.props.workitems.map((wi) => <WorkItemMatch workitem={wi} refresh={this.props.refresh} />)
         }</div>;
     }
 }
 
-let previousWis: WorkItem[] = [];
-function remove(wiId: number) {
-    showDuplicates(previousWis.filter((wi) => wi.id !== wiId));
-}
-
-export function showDuplicates(workitems: WorkItem[]) {
-    previousWis = workitems;
-    const view = workitems.length ? <Matches workitems={workitems}/> : <NoMatches/>;
+export function showDuplicates(workitems: WorkItem[], refresh: () => void) {
+    const view = workitems.length ? <Matches workitems={workitems} refresh={refresh}/> : <NoMatches/>;
     ReactDOM.render(view, $(".results")[0]);
 }

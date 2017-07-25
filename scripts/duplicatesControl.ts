@@ -16,11 +16,11 @@ export class DuplicatesControl implements Partial<IWorkItemNotificationListener>
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
         this.wiId = workItemLoadedArgs.id;
         if (workItemLoadedArgs.isNew) {
-            showDuplicates([]);
+            showDuplicates([], () => this.getTitleAndSearch());
         } else {
             this.getTitleAndSearch();
         }
-        showDuplicates([]);
+        showDuplicates([], () => this.getTitleAndSearch());
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
         if (titleField in fieldChangedArgs.changedFields) {
@@ -41,7 +41,7 @@ export class DuplicatesControl implements Partial<IWorkItemNotificationListener>
     private search(query: string) {
         getLinkedDuplicatesIds().then((duplicateIds) => {
             searchForDuplicates(query, [this.wiId, ...duplicateIds]).then((matches) => {
-                showDuplicates(matches);
+                showDuplicates(matches, () => this.search(query));
             });
         });
     }
