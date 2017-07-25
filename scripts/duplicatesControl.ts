@@ -33,21 +33,10 @@ export class DuplicatesControl implements Partial<IWorkItemNotificationListener>
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
         let action: Q.IPromise<void> | null = null;
-        const timings = new Timings();
         if (titleField in fieldChangedArgs.changedFields) {
             action = this.search(fieldChangedArgs.changedFields[titleField]);
         } else if (relatedLinks in fieldChangedArgs.changedFields) {
             action = this.getTitleAndSearch();
-        }
-        if (action) {
-            action.then(() => {
-                timings.measure("totalTime");
-                trackEvent(
-                    "fieldsChanged",
-                    {},
-                    timings.measurements,
-                );
-            });
         }
     }
 

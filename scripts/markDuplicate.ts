@@ -27,7 +27,7 @@ function getDuplicateLinks(): Q.IPromise<WorkItemRelation[]> {
 }
 
 export function addDuplicate(targetUrl: string): Q.IPromise<void> {
-    trackEvent("markDuplicateOf");
+    trackEvent("mark", {type: "duplicateOf"});
     return WorkItemFormService.getService().then((formService) =>
         formService.addWorkItemRelations([{
             rel: duplicateOf,
