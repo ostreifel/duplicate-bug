@@ -17,7 +17,17 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem, refresh: () => 
         const wiUrl = `${uri}${project}/_workitems?id=${wi.id}&_a=edit&fullScreen=true`;
         return <div className="workitem">
             <span>{(wi.fields.score as number).toFixed(3)}</span>
-            <button className="dup-bug-action" title={`Mark as duplicate of ${wi.id}`} onClick={() => this.add()}>
+            <button className="dup-bug-action"
+                title={`Mark as ${wi.id} duplicate of this`}
+                onClick={() => this.add(true)}
+            >
+                <img src="img/dupOfBug.png"/>
+            </button>
+            <button
+                className="dup-bug-action"
+                title={`Mark as this duplicate of ${wi.id}`}
+                onClick={() => this.add(false)}
+            >
                 <img src="img/dupBug.png"/>
             </button>
             <span className="id">{wi.id}</span>
@@ -26,8 +36,8 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem, refresh: () => 
             </a>
         </div>;
     }
-    private add() {
-        addDuplicate(this.props.workitem.url).then(
+    private add(isDuplicateOf: boolean) {
+        addDuplicate(this.props.workitem.url, isDuplicateOf).then(
             () => this.props.refresh(),
         );
     }
