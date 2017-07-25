@@ -4,8 +4,8 @@ import { CachedValue } from "./CachedValue";
 import { stripHtml } from "./stripHtml";
 import { WorkItemStore } from "./WorkItemStore";
 
-const repoSteps = "Microsoft.VSTS.TCM.ReproSteps";
-const title = "System.Title";
+const reproStepsField = "Microsoft.VSTS.TCM.ReproSteps";
+const titleField = "System.Title";
 interface IFieldsDocument {
     id: number;
     [name: string]: string | number;
@@ -24,8 +24,8 @@ function getIndex() {
         const fieldsArr = transformFields(wis);
 
         const idx = lunr(function(this: lunr.Index) {
-            this.field(repoSteps);
-            this.field(title, { boost: 10 });
+            this.field(reproStepsField);
+            this.field(titleField, { boost: 10 });
             for (const fields of fieldsArr) {
                 this.add(fields);
             }
@@ -36,25 +36,30 @@ function getIndex() {
 function transformFields(fieldsArr: WorkItem[]): IFieldsDocument[] {
     return fieldsArr.map((wi) => {
         const transformed: IFieldsDocument = {id: wi.id};
-        transformed[title] = wi.fields[title] as string;
-        if (repoSteps in wi.fields) {
-            const value = wi.fields[repoSteps];
+        transformed[titleField] = wi.fields[titleField] as string;
+        if (reproStepsField in wi.fields) {
+            const value = wi.fields[reproStepsField];
             if (typeof value === "string") {
-                transformed[repoSteps] = stripHtml(value);
+                transformed[reproStepsField] = stripHtml(value);
             }
         }
         return transformed;
     });
 }
+function toQuery(title: string) {
+    return title.replace(/[:^*~]/g, "\\\$1");
+}
+
 const top = 5;
 const scoreThreshold = .4;
 
-export function searchForDuplicates(query: string, excludeIds: number[]): Q.IPromise<WorkItem[]> {
+export function searchForDuplicates(title: string, excludeIds: number[]): Q.IPromise<WorkItem[]> {
     const excludeMap: {[id: string]: void} = {};
     for (const id of excludeIds) {
         excludeMap[id] = undefined;
     }
     return cachedIndex.getValue().then((index) => {
+        const query = toQuery(title);
         const allSearchResults = index.search(query);
         // tslint:disable-next-line:no-console
         console.log("all search results", allSearchResults);
