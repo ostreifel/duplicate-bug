@@ -18,14 +18,14 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem, refresh: () => 
         return <div className="workitem">
             <span>{(wi.fields.score as number).toFixed(3)}</span>
             <button className="dup-bug-action"
-                title={`Mark as ${wi.id} duplicate of this`}
+                title={`Mark ${wi.id} as duplicate of this`}
                 onClick={() => this.add(true)}
             >
                 <img src="img/dupOfBug.png"/>
             </button>
             <button
                 className="dup-bug-action"
-                title={`Mark as this duplicate of ${wi.id}`}
+                title={`Mark this as duplicate of ${wi.id}`}
                 onClick={() => this.add(false)}
             >
                 <img src="img/dupBug.png"/>
