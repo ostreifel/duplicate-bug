@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
@@ -62,7 +62,7 @@
     ],
     "contributions": [
         {
-            "id": "duplicate-bug-action",
+            "id": "duplicates-group",
             "type": "ms.vss-work-web.work-item-form-group",
             "description": "",
             "targets": [
