@@ -19,17 +19,39 @@ function getParentAreaPath(areaPath: string) {
 }
 
 export class WorkItemStore {
-    private workItems = new CachedValue(() => this.fetchAllWorkItems());
-    private lookup = new CachedValue(() => this.createLookup());
+    private workItems: { [queryParams: string]: CachedValue<WorkItem[]> } = {};
+    private lookups: { [queryParams: string]: CachedValue<{ [id: number]: WorkItem }> } = {};
     public getWorkItems() {
-        return this.workItems.getValue();
+        return this.getQueryParams().then(({
+            key,
+            areaPath,
+            wit,
+            }) => {
+            if (!(key in this.workItems)) {
+                this.workItems[key] = new CachedValue(() => this.fetchAllWorkItems(wit, areaPath));
+                this.lookups[key] = new CachedValue(() => this.createLookup(this.workItems[key].getValue()));
+            }
+            return this.workItems[key].getValue();
+        });
     }
-    public getLookup() {
-        return this.lookup.getValue();
+    public getLookup(): Q.IPromise<{ [id: number]: WorkItem }> {
+        return this.getQueryParams().then(({ key }) => this.lookups[key].getValue());
     }
-    private createLookup(): Q.IPromise<{[id: number]: WorkItem}> {
-        return this.workItems.getValue().then((wis) => {
-            const lookup: {[id: number]: WorkItem} = {};
+    private getQueryParams() {
+        return WorkItemFormService.getService().then((formService) =>
+            formService.getFieldValues([areaPathField, witField]).then(({
+                [areaPathField]: areaPath,
+                [witField]: wit,
+            }) => {
+                areaPath = getParentAreaPath(areaPath as string);
+                const key = JSON.stringify({ areaPath, wit });
+                return { key, areaPath, wit };
+            }),
+        );
+    }
+    private createLookup(wiPromise: Q.IPromise<WorkItem[]>): Q.IPromise<{ [id: number]: WorkItem }> {
+        return wiPromise.then((wis) => {
+            const lookup: { [id: number]: WorkItem } = {};
             for (const wi of wis) {
                 lookup[wi.id] = wi;
             }
@@ -53,17 +75,8 @@ ORDER BY [System.ChangedDate] DESC
         return getClient().queryByWiql({ query }, VSS.getWebContext().project.id, undefined, undefined, 4000)
             .then((res) => res.workItems.map((wi) => wi.id));
     }
-    private fetchAllWorkItems() {
-        return WorkItemFormService.getService().then((formService) =>
-            formService.getFieldValues([areaPathField, witField]).then(({
-                [areaPathField]: areaPath,
-                [witField]: wit,
-            }) => {
-                const parentAreaPath = getParentAreaPath(areaPath as string);
-                return this.fetchWorkItemIds(wit, parentAreaPath).then((ids) => this.fetchWorkItems(ids));
-            }),
-        );
-
+    private fetchAllWorkItems(wit: string, areaPath: string) {
+        return this.fetchWorkItemIds(wit, areaPath).then((ids) => this.fetchWorkItems(ids));
     }
     private fetchWorkItems(ids: number[]): Q.IPromise<WorkItem[]> {
         if (ids.length === 0) {
@@ -71,7 +84,7 @@ ORDER BY [System.ChangedDate] DESC
         }
         const batch = ids.slice(0, 200);
         const nextBatch = ids.slice(200);
-        return Q.all([getClient().getWorkItems(batch), this.fetchWorkItems(nextBatch)] )
+        return Q.all([getClient().getWorkItems(batch), this.fetchWorkItems(nextBatch)])
             .then(([curr, next]) => {
                 return [...curr, ...next];
             });
