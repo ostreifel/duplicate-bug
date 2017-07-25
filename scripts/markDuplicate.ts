@@ -1,5 +1,6 @@
 import { WorkItemRelation } from "TFS/WorkItemTracking/Contracts";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
+import { trackEvent } from "./events";
 
 const duplicate = "System.LinkTypes.Duplicate-Forward";
 const duplicateOf = "System.LinkTypes.Duplicate-Reverse";
@@ -26,6 +27,7 @@ function getDuplicateLinks(): Q.IPromise<WorkItemRelation[]> {
 }
 
 export function addDuplicate(targetUrl: string): Q.IPromise<void> {
+    trackEvent("markDuplicate");
     return WorkItemFormService.getService().then((formService) =>
         formService.addWorkItemRelations([{
             rel: duplicate,

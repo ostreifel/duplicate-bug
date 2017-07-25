@@ -2,7 +2,7 @@ import * as Q from "q";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { getClient } from "TFS/WorkItemTracking/RestClient";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
-import { CachedValue } from "./CachedVallue";
+import { CachedValue } from "./CachedValue";
 
 const areaPathField = "System.AreaPath";
 const witField = "System.WorkItemType";

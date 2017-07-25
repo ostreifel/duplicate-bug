@@ -1,6 +1,6 @@
 import * as lunr from "lunr";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
-import { CachedValue } from "./CachedVallue";
+import { CachedValue } from "./CachedValue";
 import { stripHtml } from "./stripHtml";
 import { WorkItemStore } from "./WorkItemStore";
 

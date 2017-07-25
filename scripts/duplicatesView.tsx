@@ -1,4 +1,4 @@
-
+import * as Q from "q";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
@@ -41,7 +41,9 @@ class Matches extends React.Component<{workitems: WorkItem[], refresh: () => voi
     }
 }
 
-export function showDuplicates(workitems: WorkItem[], refresh: () => void) {
+export function showDuplicates(workitems: WorkItem[], refresh: () => void): Q.IPromise<void> {
+    const deferred = Q.defer<void>();
     const view = workitems.length ? <Matches workitems={workitems} refresh={refresh}/> : <NoMatches/>;
-    ReactDOM.render(view, $(".results")[0]);
+    ReactDOM.render(view, $(".results")[0], () => deferred.resolve());
+    return deferred.promise;
 }
