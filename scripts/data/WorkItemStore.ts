@@ -1,7 +1,22 @@
 import * as Q from "q";
 import { WorkItem } from "TFS/WorkItemTracking/Contracts";
 import { getClient } from "TFS/WorkItemTracking/RestClient";
+import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
 import { CachedValue } from "./CachedVallue";
+
+const areaPathField = "System.AreaPath";
+const witField = "System.WorkItemType";
+
+function getParentAreaPath(areaPath: string) {
+    if (!areaPath) {
+        return "";
+    }
+    const match = areaPath.match(/^(.+?)(?:\\[^\\]*)?$/);
+    if (!match) {
+        return areaPath;
+    }
+    return match[1];
+}
 
 export class WorkItemStore {
     private workItems = new CachedValue(() => this.fetchAllWorkItems());
@@ -21,23 +36,34 @@ export class WorkItemStore {
             return lookup;
         });
     }
-    private fetchWorkItemIds() {
+    private fetchWorkItemIds(workItemType: string, areaPath: string) {
         const cutoff = new Date();
         cutoff.setMonth(-3);
         const query = `
 SELECT
-        [System.Id]
+    [System.Id]
 FROM workitems
 WHERE
-        [System.TeamProject] = @project
-        AND [System.CreatedDate] > @today - 90
+    [System.TeamProject] = @project
+    AND [System.ChangedDate] > @today - 90
+    AND [System.WorkItemType] = '${workItemType}'
+    AND [System.AreaPath] UNDER '${areaPath}'
 ORDER BY [System.ChangedDate] DESC
         `;
-        return getClient().queryByWiql({ query }, VSS.getWebContext().project.id, undefined, undefined, 2000)
+        return getClient().queryByWiql({ query }, VSS.getWebContext().project.id, undefined, undefined, 4000)
             .then((res) => res.workItems.map((wi) => wi.id));
     }
     private fetchAllWorkItems() {
-        return this.fetchWorkItemIds().then((ids) => this.fetchWorkItems(ids));
+        return WorkItemFormService.getService().then((formService) =>
+            formService.getFieldValues([areaPathField, witField]).then(({
+                [areaPathField]: areaPath,
+                [witField]: wit,
+            }) => {
+                const parentAreaPath = getParentAreaPath(areaPath as string);
+                return this.fetchWorkItemIds(wit, parentAreaPath).then((ids) => this.fetchWorkItems(ids));
+            }),
+        );
+
     }
     private fetchWorkItems(ids: number[]): Q.IPromise<WorkItem[]> {
         if (ids.length === 0) {

@@ -27,14 +27,12 @@ function getDuplicateLinks(): Q.IPromise<WorkItemRelation[]> {
 
 export function addDuplicate(targetUrl: string): Q.IPromise<void> {
     return WorkItemFormService.getService().then((formService) =>
-        formService.getId().then((id) => {
-            return formService.addWorkItemRelations([{
-                rel: duplicate,
-                attributes: {
-                    comment: "Detected by the Duplicate Bug extension",
-                },
-                url: targetUrl,
-            }]);
-        }),
+        formService.addWorkItemRelations([{
+            rel: duplicate,
+            attributes: {
+                comment: "Detected by the Duplicate Bug extension",
+            },
+            url: targetUrl,
+        }]),
     );
 }
