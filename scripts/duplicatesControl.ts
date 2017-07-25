@@ -5,34 +5,44 @@ import {
     IWorkItemNotificationListener,
 } from "TFS/WorkItemTracking/ExtensionContracts";
 import { WorkItemFormService } from "TFS/WorkItemTracking/Services";
-import { WorkItemIndex } from "./data/WorkItemIndex";
+import { searchForDuplicates } from "./data/WorkItemIndex";
 import { showDuplicates } from "./duplicatesView";
+import { getLinkedDuplicatesIds } from "./markDuplicate";
 
 const titleField = "System.Title";
+const relatedLinks = "System.RelatedLinks";
 export class DuplicatesControl implements Partial<IWorkItemNotificationListener> {
-    private index: WorkItemIndex;
+    private wiId: number;
     public onLoaded(workItemLoadedArgs: IWorkItemLoadedArgs): void {
-        this.index = new WorkItemIndex(workItemLoadedArgs.id);
+        this.wiId = workItemLoadedArgs.id;
         if (workItemLoadedArgs.isNew) {
             showDuplicates([]);
         } else {
-            WorkItemFormService.getService().then((formService) =>
-                formService.getFieldValues([titleField]).then((values) => {
-                    this.search(values[titleField] as string);
-                }),
-            );
+            this.getTitleAndSearch();
         }
         showDuplicates([]);
     }
     public onFieldChanged(fieldChangedArgs: IWorkItemFieldChangedArgs): void {
         if (titleField in fieldChangedArgs.changedFields) {
             this.search(fieldChangedArgs.changedFields[titleField]);
+        } else if (relatedLinks in fieldChangedArgs.changedFields) {
+            this.getTitleAndSearch();
         }
     }
 
+    private getTitleAndSearch() {
+        WorkItemFormService.getService().then((formService) =>
+            formService.getFieldValues([titleField]).then((values) => {
+                this.search(values[titleField] as string);
+            }),
+        );
+    }
+
     private search(query: string) {
-        this.index.search(query).then((matches) => {
-            showDuplicates(matches);
+        getLinkedDuplicatesIds().then((duplicateIds) => {
+            searchForDuplicates(query, [this.wiId, ...duplicateIds]).then((matches) => {
+                showDuplicates(matches);
+            });
         });
     }
 

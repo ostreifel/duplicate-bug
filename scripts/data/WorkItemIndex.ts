@@ -48,24 +48,24 @@ function transformFields(fieldsArr: WorkItem[]): IFieldsDocument[] {
 }
 const top = 5;
 const scoreThreshold = .4;
-export class WorkItemIndex {
-    constructor(
-        private readonly wiId: number,
-    ) { }
 
-    public search(query: string): Q.IPromise<WorkItem[]> {
-        return cachedIndex.getValue().then((index) => {
-            const results = index.search(query)
-                .slice(0, top + 1)
-                .filter((r) => Number(r.ref) !== this.wiId)
-                .filter((r) => r.score > scoreThreshold)
-                .slice(0, top);
-            return workItemStore.getLookup().then((lookup) => results.map((r) => {
-                const wi = lookup[r.ref];
-                wi.fields.score = r.score;
-                return wi;
-            }));
-        });
+export function searchForDuplicates(query: string, excludeIds: number[]): Q.IPromise<WorkItem[]> {
+    const excludeMap: {[id: string]: void} = {};
+    for (const id of excludeIds) {
+        excludeMap[id] = undefined;
     }
-
+    return cachedIndex.getValue().then((index) => {
+        const allSearchResults = index.search(query);
+        // tslint:disable-next-line:no-console
+        console.log("all search results", allSearchResults);
+        const results = allSearchResults
+            .filter((r) => r.score > scoreThreshold)
+            .filter((r) => !(String(r.ref) in excludeMap))
+            .slice(0, top);
+        return workItemStore.getLookup().then((lookup) => results.map((r) => {
+            const wi = lookup[r.ref];
+            wi.fields.score = r.score;
+            return wi;
+        }));
+    });
 }

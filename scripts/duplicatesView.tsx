@@ -6,7 +6,7 @@ import { addDuplicate } from "./markDuplicate";
 
 class NoMatches extends React.Component<{}, {}> {
     public render() {
-        return <div className={"no-results"}>{"No matches found"}</div>;
+        return <div className={"no-results"}>{"No recent unlinked duplicates found"}</div>;
     }
 }
 class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
@@ -27,7 +27,9 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem}, {}> {
         </div>;
     }
     private add() {
-        addDuplicate(this.props.workitem.url);
+        addDuplicate(this.props.workitem.url).then(
+            () => remove(this.props.workitem.id),
+        );
     }
 }
 
@@ -39,7 +41,13 @@ class Matches extends React.Component<{workitems: WorkItem[]}, {}> {
     }
 }
 
+let previousWis: WorkItem[] = [];
+function remove(wiId: number) {
+    showDuplicates(previousWis.filter((wi) => wi.id !== wiId));
+}
+
 export function showDuplicates(workitems: WorkItem[]) {
+    previousWis = workitems;
     const view = workitems.length ? <Matches workitems={workitems}/> : <NoMatches/>;
     ReactDOM.render(view, $(".results")[0]);
 }
