@@ -17,7 +17,7 @@ class WorkItemMatch extends React.Component<{workitem: WorkItem, refresh: () => 
         const wiUrl = `${uri}${project}/_workitems?id=${wi.id}&_a=edit&fullScreen=true`;
         return <div className="workitem">
             <span>{(wi.fields.score as number).toFixed(3)}</span>
-            <button className="dup-bug-action" title="Mark as duplicate" onClick={() => this.add()}>
+            <button className="dup-bug-action" title={`Mark as duplicate of ${wi.id}`} onClick={() => this.add()}>
                 <img src="img/dupBug.png"/>
             </button>
             <span className="id">{wi.id}</span>
