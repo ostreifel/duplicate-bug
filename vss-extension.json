@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "1.0.14",
+    "version": "1.0.16",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
@@ -27,7 +27,7 @@
     ],
     "links": {
         "getstarted": {
-            "uri": "https://github.com/ostreifel/duplicate-bug/blob/master/GettingStarted.md"
+            "uri": "https://github.com/ostreifel/duplicate-bug/blob/master/details.md#getting-started"
         }
     },
     "content": {
