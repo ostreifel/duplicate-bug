@@ -1,3 +1,4 @@
+# Managing Duplicates
 As soon as fields are filed out on a new workitem suggested duplicates will be shown. These suggestions will also be shown for existing work items.  
 ![filing out workitem](img/filingBug.png)  
 Select the work item that the current one duplicates  
