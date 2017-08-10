@@ -22,7 +22,7 @@ For each work item type to customize at the location
 ```
 add 
 ```xml
-<Extension Id="ottostreifel.duplicates-bug" />
+<Extension Id="ottostreifel.duplicate-bug" />
 ```
 Within the same Weblayout choose a Section element and add
 ```xml
