@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
@@ -11,11 +11,7 @@
     },
     "targets": [
         {
-            "id": "Microsoft.VisualStudio.Services.Integration",
-            "version": "[15.0,)"
-        },
-        {
-            "id": "Microsoft.VisualStudio.Services.Cloud"
+            "id": "Microsoft.VisualStudio.Services"
         }
     ],
     "tags": [
@@ -25,11 +21,6 @@
         "duplicate",
         "related"
     ],
-    "links": {
-        "getstarted": {
-            "uri": "https://github.com/ostreifel/duplicate-bug/blob/master/details.md#getting-started"
-        }
-    },
     "content": {
         "details": {
             "path": "details.md"
