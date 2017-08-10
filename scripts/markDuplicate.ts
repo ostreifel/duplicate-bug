@@ -19,7 +19,7 @@ function getDuplicateLinks(): Q.IPromise<WorkItemRelation[]> {
         formService.getId().then((id) =>
             formService.getWorkItemRelations().then((relations) =>
                 relations.filter((relation) =>
-                    relation.rel === duplicate || relation.rel === duplicateOf,
+                    !relation.attributes.isDeleted && (relation.rel === duplicate || relation.rel === duplicateOf),
                 ),
             ),
         ),
