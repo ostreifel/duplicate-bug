@@ -61,8 +61,6 @@ export function searchForDuplicates(title: string, excludeIds: number[]): Q.IPro
     return cachedIndex.getValue().then((index) => {
         const query = toQuery(title);
         const allSearchResults = index.search(query);
-        // tslint:disable-next-line:no-console
-        console.log("all search results", allSearchResults);
         const results = allSearchResults
             .filter((r) => r.score > scoreThreshold)
             .filter((r) => !(String(r.ref) in excludeMap))
