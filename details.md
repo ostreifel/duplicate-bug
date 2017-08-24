@@ -30,6 +30,7 @@ Within the same Weblayout choose a Section element and add
 ``` 
 
 # Change Log
+(08/24/2017) 1.0.23 Include work items not in current project or areapath if counts permit  
 (07/25/2017) 1.0.6 Link repo  
 Restrict to compatible versions of on premise  
 (07/24/2017) 1.0.1 Initial Release  

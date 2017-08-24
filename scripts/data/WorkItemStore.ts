@@ -61,7 +61,7 @@ export class WorkItemStore {
     private fetchWorkItemIds(workItemType: string, areaPath: string) {
         const cutoff = new Date();
         cutoff.setMonth(-3);
-        const query = `
+        const currProjQuery = `
 SELECT
     [System.Id]
 FROM workitems
@@ -72,8 +72,34 @@ WHERE
     AND [System.AreaPath] UNDER '${areaPath}'
 ORDER BY [System.ChangedDate] DESC
         `;
-        return getClient().queryByWiql({ query }, VSS.getWebContext().project.id, undefined, undefined, 4000)
-            .then((res) => res.workItems.map((wi) => wi.id));
+        const currProm = getClient().queryByWiql(
+            { query: currProjQuery },
+            VSS.getWebContext().project.id, undefined, undefined, 4000,
+        );
+
+        const allProjQuery = `
+SELECT
+    [System.Id]
+FROM workitems
+WHERE
+    [System.ChangedDate] > @today - 90
+    AND [System.WorkItemType] = '${workItemType}'
+    AND (
+        [System.TeamProject] <> @project
+        OR [System.AreaPath] NOT UNDER '${areaPath}'
+    )
+ORDER BY [System.ChangedDate] DESC
+                `;
+        const allProm = getClient().queryByWiql(
+            { query: allProjQuery },
+            VSS.getWebContext().project.id, undefined, undefined, 4000,
+        );
+        return Q.all([currProm, allProm])
+            .then(([res, allRes]) => {
+                const currIds = res.workItems.map((wi) => wi.id);
+                const allIds = allRes.workItems.map((wi) => wi.id);
+                return [...currIds, ...allIds.slice(0, 4000 - currIds.length)];
+            });
     }
     private fetchAllWorkItems(wit: string, areaPath: string) {
         return this.fetchWorkItemIds(wit, areaPath).then((ids) => this.fetchWorkItems(ids));

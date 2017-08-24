@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "duplicate-bug",
-    "version": "1.0.20",
+    "version": "1.0.23",
     "name": "Duplicate Bug",
     "scopes": [ "vso.work", "vso.work_write" ],
     "description": "Detect duplication as bugs are filed.",
