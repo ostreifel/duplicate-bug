@@ -23,7 +23,7 @@ function textNodesUnder(node: Node): string[] {
         for (
             let currNode = node.firstChild;
             currNode;
-            currNode = currNode.nextSibling
+            currNode = currNode.nextSibling as ChildNode
         ) {
             if (currNode.nodeType === 3 && currNode.nodeValue) {
                 all.push(currNode.nodeValue);

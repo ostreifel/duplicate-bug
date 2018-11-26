@@ -19,6 +19,7 @@ function getParentAreaPath(areaPath: string) {
 }
 
 export class WorkItemStore {
+    private static readonly WORK_ITEM_LIMIT = 1000;
     private workItems: { [queryParams: string]: CachedValue<WorkItem[]> } = {};
     private lookups: { [queryParams: string]: CachedValue<{ [id: number]: WorkItem }> } = {};
     public getWorkItems() {
@@ -28,7 +29,7 @@ export class WorkItemStore {
             wit,
             }) => {
             if (!(key in this.workItems)) {
-                this.workItems[key] = new CachedValue(() => this.fetchAllWorkItems(wit, areaPath));
+                this.workItems[key] = new CachedValue(() => this.fetchAllWorkItems(wit as string, areaPath as string));
                 this.lookups[key] = new CachedValue(() => this.createLookup(this.workItems[key].getValue()));
             }
             return this.workItems[key].getValue();
@@ -74,7 +75,7 @@ ORDER BY [System.ChangedDate] DESC
         `;
         const currProm = getClient().queryByWiql(
             { query: currProjQuery },
-            VSS.getWebContext().project.id, undefined, undefined, 4000,
+            VSS.getWebContext().project.id, undefined, undefined, WorkItemStore.WORK_ITEM_LIMIT,
         );
 
         const allProjQuery = `
@@ -92,13 +93,13 @@ ORDER BY [System.ChangedDate] DESC
                 `;
         const allProm = getClient().queryByWiql(
             { query: allProjQuery },
-            VSS.getWebContext().project.id, undefined, undefined, 4000,
+            VSS.getWebContext().project.id, undefined, undefined, WorkItemStore.WORK_ITEM_LIMIT,
         );
         return Q.all([currProm, allProm])
             .then(([res, allRes]) => {
                 const currIds = res.workItems.map((wi) => wi.id);
                 const allIds = allRes.workItems.map((wi) => wi.id);
-                return [...currIds, ...allIds.slice(0, 4000 - currIds.length)];
+                return [...currIds, ...allIds].slice(WorkItemStore.WORK_ITEM_LIMIT);
             });
     }
     private fetchAllWorkItems(wit: string, areaPath: string) {
